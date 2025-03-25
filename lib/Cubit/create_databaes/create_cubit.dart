@@ -59,4 +59,17 @@ class AppCubit extends Cubit<AppState> {
       emit(AppCreateDatabase());
     });
   }
+
+  void inserttoDataBase({
+    required TextEditingController title,
+    required TextEditingController time,
+    required TextEditingController date,
+  }) {
+    database.transaction((txn) async{
+      txn.rawInsert('INSERT INTO tasks (title, date, time, status) VALUES("${title.text}", "${date.text}", "${time.text}", "new")');
+    },).then((value) {
+      print('$value inserted successfully');
+      emit(AppInsertDatabase());
+    },);
+  }
 }
