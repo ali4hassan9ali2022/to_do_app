@@ -100,4 +100,14 @@ class AppCubit extends Cubit<AppState> {
       emit(AppGetDatabase());
     });
   }
+  void UpdateDatabase({
+    required String status,
+    required int id,
+  }) {
+    database.rawUpdate('UPDATE tasks SET status = ? WHERE id = ?',
+        [status, '$id']).then((value) {
+      getData(database);
+      emit(AppUpdateDatabase());
+    });
+  }
 }
