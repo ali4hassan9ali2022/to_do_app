@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/Cubit/create_databaes/create_cubit.dart';
 import 'package:to_do_app/Main/home_main_view.dart';
 
 void main() {
@@ -10,8 +12,9 @@ class ToDoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeMainView(),
+    return BlocProvider(
+      create: (context) => CreateCubit(),
+      child: const MaterialApp(home: HomeMainView()),
     );
   }
 }

@@ -3,6 +3,6 @@ import 'package:to_do_app/Cubit/create_databaes/create_state.dart';
 
 class CreateCubit extends Cubit<CreateState> {
   CreateCubit() : super(CreateInitialState());
+  int currentIndex = 0;
 
-  
 }
