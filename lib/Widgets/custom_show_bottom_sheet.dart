@@ -54,7 +54,7 @@ class CustomShowBottomSheet extends StatelessWidget {
             CustomTextField(
               hintText: "date",
               prefixIcon: Icons.watch_later_outlined,
-              controller: cubit.titleController,
+              controller: cubit.dateController,
               validator: (p0) {
                 if (p0!.isEmpty) {
                   return "required";

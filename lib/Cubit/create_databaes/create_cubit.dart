@@ -25,7 +25,7 @@ class AppCubit extends Cubit<AppState> {
     const DoneTaskView(),
     const ArchivedTaskView(),
   ];
-  late Database database;
+  Database? database;
   void changeIndex(int index) {
     currentIndex = index;
     emit(AppChangeBottomNavbar());
@@ -38,7 +38,8 @@ class AppCubit extends Cubit<AppState> {
   }
 
   void createDatabase() {
-    openDatabase(
+    if(database != null) {
+      openDatabase(
       "todolist.db",
       version: 1,
       onCreate: (db, version) {
@@ -62,15 +63,18 @@ class AppCubit extends Cubit<AppState> {
       database = value;
       emit(AppCreateDatabase());
     });
+    }
   }
+  
 
   void inserttoDataBase({
     required TextEditingController title,
     required TextEditingController time,
     required TextEditingController date,
-  }) {
-    database
-        .transaction((txn) async {
+  }) async{
+    if(database != null) {
+      await database
+        ?.transaction((txn) async {
           txn.rawInsert(
             'INSERT INTO tasks (title, date, time, status) VALUES("${title.text}", "${date.text}", "${time.text}", "new")',
           );
@@ -80,14 +84,17 @@ class AppCubit extends Cubit<AppState> {
           emit(AppInsertDatabase());
           getData(database);
         });
+    } else {
+      print("Error");
+    }
   }
 
-  void getData(database) {
+  void getData(db) {
     newTasks = [];
     doneTasks = [];
     archivedTasks = [];
     emit(AppGetDatabaseLoadingState());
-    database.rawQuery('SELECT * FROM tasks').then((value) {
+    database!.rawQuery('SELECT * FROM tasks').then((value) {
       for (var element in value) {
         if (element['status'] == 'new') {
           newTasks.add(element);
@@ -100,11 +107,11 @@ class AppCubit extends Cubit<AppState> {
       emit(AppGetDatabase());
     });
   }
-  void UpdateDatabase({
+  void updateDatabase({
     required String status,
     required int id,
   }) {
-    database.rawUpdate('UPDATE tasks SET status = ? WHERE id = ?',
+    database!.rawUpdate('UPDATE tasks SET status = ? WHERE id = ?',
         [status, '$id']).then((value) {
       getData(database);
       emit(AppUpdateDatabase());

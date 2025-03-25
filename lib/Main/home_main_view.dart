@@ -19,7 +19,13 @@ class HomeMainView extends StatelessWidget {
             backgroundColor: Colors.blueAccent,
             onPressed: () {
               if (cubit.isChecked) {
-                if (cubit.keyState.currentState?.validate() ?? true) {}
+                if (cubit.keyState.currentState?.validate() ?? true) {
+                  cubit.inserttoDataBase(
+                    title: cubit.titleController,
+                    time: cubit.timeController,
+                    date: cubit.dateController,
+                  );
+                }
               } else {
                 cubit.scaffoldKey.currentState!
                     .showBottomSheet((context) {
@@ -28,6 +34,7 @@ class HomeMainView extends StatelessWidget {
                     .closed
                     .then((value) {
                       cubit.changeBottomSheet(isShow: false, icon: Icons.edit);
+               
                     });
                 cubit.changeBottomSheet(isShow: true, icon: Icons.add);
               }
