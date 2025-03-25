@@ -5,7 +5,7 @@ import 'package:to_do_app/Widgets/custom_text_form_field.dart';
 
 class CustomShowBottomSheet extends StatelessWidget {
   const CustomShowBottomSheet({super.key, required this.cubit});
-  final CreateCubit cubit;
+  final AppCubit cubit;
   @override
   Widget build(BuildContext context) {
     return Container(

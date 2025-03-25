@@ -10,8 +10,8 @@ class HomeMainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var cubit = BlocProvider.of<CreateCubit>(context);
-    return BlocConsumer<CreateCubit, CreateState>(
+    var cubit = BlocProvider.of<AppCubit>(context);
+    return BlocConsumer<AppCubit, AppState>(
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(

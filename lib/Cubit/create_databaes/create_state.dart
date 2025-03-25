@@ -1,4 +1,6 @@
+abstract class AppState {}
 
-abstract class CreateState {}
-class CreateInitialState extends CreateState{}
-class AppChangeBottomNavbar extends CreateState{}
+class AppInitialState extends AppState {}
+
+class AppChangeBottomNavbar extends AppState {}
+class AppChangeBottomSheetChange extends AppState {}

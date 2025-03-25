@@ -13,7 +13,7 @@ class ToDoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CreateCubit(),
+      create: (context) => AppCubit(),
       child: const MaterialApp(home: HomeMainView()),
     );
   }
