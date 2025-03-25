@@ -7,6 +7,9 @@ import 'package:to_do_app/View/done_task_view.dart';
 import 'package:to_do_app/View/new_task_view.dart';
 
 class AppCubit extends Cubit<AppState> {
+  List<Map> newTasks = [];
+  List<Map> doneTasks = [];
+  List<Map> archivedTasks = [];
   AppCubit() : super(AppInitialState());
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> keyState = GlobalKey();
@@ -52,6 +55,7 @@ class AppCubit extends Cubit<AppState> {
             });
       },
       onOpen: (db) {
+        getData(database);
         print('databaseopened');
       },
     ).then((value) {
@@ -65,11 +69,35 @@ class AppCubit extends Cubit<AppState> {
     required TextEditingController time,
     required TextEditingController date,
   }) {
-    database.transaction((txn) async{
-      txn.rawInsert('INSERT INTO tasks (title, date, time, status) VALUES("${title.text}", "${date.text}", "${time.text}", "new")');
-    },).then((value) {
-      print('$value inserted successfully');
-      emit(AppInsertDatabase());
-    },);
+    database
+        .transaction((txn) async {
+          txn.rawInsert(
+            'INSERT INTO tasks (title, date, time, status) VALUES("${title.text}", "${date.text}", "${time.text}", "new")',
+          );
+        })
+        .then((value) {
+          print('$value inserted successfully');
+          emit(AppInsertDatabase());
+          getData(database);
+        });
+  }
+
+  void getData(database) {
+    newTasks = [];
+    doneTasks = [];
+    archivedTasks = [];
+    emit(AppGetDatabaseLoadingState());
+    database.rawQuery('SELECT * FROM tasks').then((value) {
+      for (var element in value) {
+        if (element['status'] == 'new') {
+          newTasks.add(element);
+        } else if (element['status'] == 'done') {
+          doneTasks.add(element);
+        } else {
+          archivedTasks.add(element);
+        }
+      }
+      emit(AppGetDatabase());
+    });
   }
 }
