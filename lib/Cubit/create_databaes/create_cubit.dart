@@ -29,5 +29,6 @@ class AppCubit extends Cubit<AppState> {
   void changeBottomSheet({required bool isShow, required IconData icon}) {
     isChecked = isShow;
     iconData = icon;
+    emit(AppChangeBottomSheetChange());
   }
 }

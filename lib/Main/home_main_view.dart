@@ -18,11 +18,21 @@ class HomeMainView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.blueAccent,
             onPressed: () {
-              cubit.scaffoldKey.currentState!.showBottomSheet((context) {
-                return CustomShowBottomSheet(cubit: cubit);
-              });
+              if (cubit.isChecked) {
+                if (cubit.keyState.currentState?.validate() ?? true) {}
+              } else {
+                cubit.scaffoldKey.currentState!
+                    .showBottomSheet((context) {
+                      return CustomShowBottomSheet(cubit: cubit);
+                    })
+                    .closed
+                    .then((value) {
+                      cubit.changeBottomSheet(isShow: false, icon: Icons.edit);
+                    });
+                cubit.changeBottomSheet(isShow: true, icon: Icons.add);
+              }
             },
-            child: const Icon(Icons.add, color: Colors.white),
+            child: Icon(cubit.iconData, color: Colors.white),
           ),
           key: cubit.scaffoldKey,
           appBar: AppBar(title: Text(cubit.titlePages[cubit.currentIndex])),
