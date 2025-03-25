@@ -19,7 +19,7 @@ class HomeMainView extends StatelessWidget {
             backgroundColor: Colors.blueAccent,
             onPressed: () {
               cubit.scaffoldKey.currentState!.showBottomSheet((context) {
-                return const CustomShowBottomSheet();
+                return CustomShowBottomSheet(cubit: cubit);
               });
             },
             child: const Icon(Icons.add, color: Colors.white),
