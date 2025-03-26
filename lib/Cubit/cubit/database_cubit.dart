@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:to_do_app/View/archived_task_view.dart';
 import 'package:to_do_app/View/done_task_view.dart';
@@ -20,6 +19,7 @@ class DatabaseCubit extends Cubit<DatabaseState> {
   TextEditingController titleController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   int currentIndex = 0;
   bool isChecked = false;
   IconData iconData = Icons.edit;
@@ -128,17 +128,7 @@ class DatabaseCubit extends Cubit<DatabaseState> {
     });
   }
 
-  void searchTasks(String query) async {
-    if (database == null) {
-      print("Database is not initialzed");
-    }
-    List<Map> result = await database!.query(
-      'tasks',
-      where: 'title LINK ?',
-      whereArgs: ['%$query%'],
-    );
-    emit(AppSearchDatabaseState(result));
-  }
+  
 
   // void loadTheme() async{
 

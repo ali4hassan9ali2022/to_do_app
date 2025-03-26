@@ -11,6 +11,8 @@ class CustomCardListView extends StatelessWidget {
       condition: task.isNotEmpty,
       builder: (context) {
         return ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             return CustomCard(modle: task[index]);
           },

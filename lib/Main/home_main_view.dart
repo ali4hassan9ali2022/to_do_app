@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/Cubit/Theme_cubit/Theme_cubit.dart';
 import 'package:to_do_app/Cubit/Theme_cubit/theme_state.dart';
 import 'package:to_do_app/Cubit/cubit/database_cubit.dart';
+
 import 'package:to_do_app/Widgets/custom_bottom_nav_bar.dart';
 import 'package:to_do_app/Widgets/custom_show_bottom_sheet.dart';
 
@@ -51,7 +52,7 @@ class HomeMainView extends StatelessWidget {
           ),
           key: cubit.scaffoldKey,
           appBar: AppBar(
-            centerTitle: true,
+        
             backgroundColor: Colors.teal,
             title: Text(
               cubit.titlePages[cubit.currentIndex],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_app/Helper/helper.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -34,10 +35,5 @@ class CustomTextField extends StatelessWidget {
     );
   }
 
-  OutlineInputBorder outlineInputBorder() {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color:  Colors.grey),
-    );
-  }
+  
 }
