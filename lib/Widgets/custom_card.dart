@@ -7,49 +7,55 @@ class CustomCard extends StatelessWidget {
   final Map modle;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      child: Row(
-        children: [
-          CircleAvatar(radius: 40, child: Text("${modle['time']}")),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "${modle['title']}",
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+    return Dismissible(
+      onDismissed: (direction) {
+        BlocProvider.of<DatabaseCubit>(context).deleteData(id: modle['id']);
+      },
+      key: Key(modle['id'].toString()),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: Row(
+          children: [
+            CircleAvatar(radius: 40, child: Text("${modle['time']}")),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "${modle['title']}",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  "${modle['date']}",
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
+                  Text(
+                    "${modle['date']}",
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 20),
-          IconButton(
-            onPressed: () {
-              BlocProvider.of<DatabaseCubit>(
-                context,
-              ).update(status: "done", id: modle['id']);
-            },
-            icon: const Icon(Icons.check_box, color: Colors.blue),
-          ),
-          IconButton(
-            onPressed: () {
-              BlocProvider.of<DatabaseCubit>(
-                context,
-              ).update(status: "archive", id: modle['id']);
-            },
-            icon: const Icon(Icons.archive, color: Colors.grey),
-          ),
-        ],
+            const SizedBox(width: 20),
+            IconButton(
+              onPressed: () {
+                BlocProvider.of<DatabaseCubit>(
+                  context,
+                ).updateData(status: "done", id: modle['id']);
+              },
+              icon: const Icon(Icons.check_box, color: Colors.blue),
+            ),
+            IconButton(
+              onPressed: () {
+                BlocProvider.of<DatabaseCubit>(
+                  context,
+                ).updateData(status: "archive", id: modle['id']);
+              },
+              icon: const Icon(Icons.archive, color: Colors.grey),
+            ),
+          ],
+        ),
       ),
     );
   }

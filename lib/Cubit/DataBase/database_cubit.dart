@@ -108,12 +108,21 @@ class DatabaseCubit extends Cubit<DatabaseState> {
     });
   }
 
-  void update({required String status, required int id}) {
+  void updateData({required String status, required int id}) {
     database!
         .rawUpdate('UPDATE tasks SET status = ? WHERE id = ?', [status, '$id'])
         .then((value) {
           getDataFromDatabase(database);
           emit(AppUpdateDatabase());
+        });
+  }
+
+  void deleteData({required int id}) {
+    database!
+        .rawDelete('DELETE FROM tasks WHERE id = ?', ['$id'])
+        .then((value) {
+          getDataFromDatabase(database);
+          emit(AppDeleteDatabase());
         });
   }
 }

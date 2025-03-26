@@ -11,3 +11,4 @@ class AppGetDatabaseLoadingState extends DatabaseState{}
 class AppGetDatabase extends DatabaseState{}
 class AppInsertDatabase extends DatabaseState{}
 class AppUpdateDatabase extends DatabaseState{}
+class AppDeleteDatabase extends DatabaseState{}
