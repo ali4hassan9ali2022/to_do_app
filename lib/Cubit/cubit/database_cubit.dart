@@ -120,24 +120,34 @@ class DatabaseCubit extends Cubit<DatabaseState> {
   }
 
   void deleteData({required int id}) {
-    database!
-        .rawDelete('DELETE FROM tasks WHERE id = ?', ['$id'])
-        .then((value) {
-          getDataFromDatabase(database);
-          emit(AppDeleteDatabase());
-        });
+    database!.rawDelete('DELETE FROM tasks WHERE id = ?', ['$id']).then((
+      value,
+    ) {
+      getDataFromDatabase(database);
+      emit(AppDeleteDatabase());
+    });
   }
 
- 
-  
-  void loadTheme() async{
+  void searchTasks(String query) async {
+    if (database == null) {
+      print("Database is not initialzed");
+    }
+    List<Map> result = await database!.query(
+      'tasks',
+      where: 'title LINK ?',
+      whereArgs: ['%$query%'],
+    );
+    emit(AppSearchDatabaseState(result));
+  }
 
-   SharedPreferences prefs = await SharedPreferences.getInstance();
-   isDark = prefs.getBool('isDark') ?? false;
-  
-  }
-  void saveTheme(bool isDark) async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isDark', isDark);
-  }
+  // void loadTheme() async{
+
+  //  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //  isDark = prefs.getBool('isDark') ?? false;
+
+  // }
+  // void saveTheme(bool isDark) async{
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool('isDark', isDark);
+  // }
 }

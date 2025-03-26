@@ -22,7 +22,7 @@ class HomeMainView extends StatelessWidget {
         var cubit = BlocProvider.of<DatabaseCubit>(context);
         return Scaffold(
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.teal,
             onPressed: () {
               if (cubit.isChecked) {
                 if (cubit.keyState.currentState?.validate() ?? true) {
@@ -51,7 +51,12 @@ class HomeMainView extends StatelessWidget {
           ),
           key: cubit.scaffoldKey,
           appBar: AppBar(
-            title: Text(cubit.titlePages[cubit.currentIndex]),
+            centerTitle: true,
+            backgroundColor: Colors.teal,
+            title: Text(
+              cubit.titlePages[cubit.currentIndex],
+              style: const TextStyle(color: Colors.white),
+            ),
             actions: [
               IconButton(
                 onPressed: () {
@@ -61,8 +66,8 @@ class HomeMainView extends StatelessWidget {
                   builder: (context, state) {
                     return Icon(
                       state is DarkThemeState
-                          ? Icons.dark_mode
-                          : Icons.light_mode,
+                          ? Icons.light_mode
+                          : Icons.dark_mode,
                     );
                   },
                 ),
