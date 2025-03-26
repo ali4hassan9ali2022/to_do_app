@@ -1,16 +1,18 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meta/meta.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:to_do_app/Cubit/create_databaes/create_state.dart';
 import 'package:to_do_app/View/archived_task_view.dart';
 import 'package:to_do_app/View/done_task_view.dart';
 import 'package:to_do_app/View/new_task_view.dart';
 
-class AppCubit extends Cubit<AppState> {
+part 'database_state.dart';
+
+class DatabaseCubit extends Cubit<DatabaseState> {
+  DatabaseCubit() : super(DatabaseInitial());
   List<Map> newTasks = [];
   List<Map> doneTasks = [];
   List<Map> archivedTasks = [];
-  AppCubit() : super(AppInitialState());
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> keyState = GlobalKey();
   TextEditingController titleController = TextEditingController();
@@ -37,84 +39,81 @@ class AppCubit extends Cubit<AppState> {
     emit(AppChangeBottomSheetChange());
   }
 
-  void createDatabase() {
-    if(database != null) {
-      openDatabase(
-      "todolist.db",
+  void createDatabase(BuildContext context) {
+    openDatabase(
+      "todo.db",
       version: 1,
-      onCreate: (db, version) {
+      onCreate: (db, version) async {
         print('databasecreated');
-        db
-            .execute(
-              "CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, date, TEXT, time TEXT, status TEXT)",
-            )
-            .then((value) {
-              print('Table created');
-            })
-            .catchError((error) {
-              print('Error: ${error.toString()}');
-            });
+        if (database != null) {
+          await db
+              .execute(
+                "CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, status TEXT)",
+              )
+              .then((value) {
+                print('Table created');
+              })
+              .catchError((error) {
+                print('Error: ${error.toString()}');
+              });
+        } else {
+          print("Database is not");
+        }
       },
       onOpen: (db) {
-        getData(database);
+        getDataFromDatabase(db);
         print('databaseopened');
       },
     ).then((value) {
       database = value;
       emit(AppCreateDatabase());
     });
-    }
   }
-  
 
-  void inserttoDataBase({
+  insertToDatabase({
     required TextEditingController title,
     required TextEditingController time,
     required TextEditingController date,
-  }) async{
-    if(database != null) {
-      await database
-        ?.transaction((txn) async {
+  }) async {
+    await database!
+        .transaction((txn) async {
           txn.rawInsert(
-            'INSERT INTO tasks (title, date, time, status) VALUES("${title.text}", "${date.text}", "${time.text}", "new")',
+            'INSERT INTO tasks(title, date, time, status) VALUES("${title.text}", "${date.text}", "${time.text}", "new")',
           );
         })
         .then((value) {
           print('$value inserted successfully');
           emit(AppInsertDatabase());
-          getData(database);
+          getDataFromDatabase(database);
         });
-    } else {
-      print("Error");
-    }
   }
 
-  void getData(db) {
+  getDataFromDatabase(database) {
     newTasks = [];
     doneTasks = [];
     archivedTasks = [];
     emit(AppGetDatabaseLoadingState());
-    database!.rawQuery('SELECT * FROM tasks').then((value) {
-      for (var element in value) {
+    database.rawQuery('SELECT * FROM tasks').then((value) {
+      value.forEach((element) {
         if (element['status'] == 'new') {
           newTasks.add(element);
+          print(newTasks);
         } else if (element['status'] == 'done') {
           doneTasks.add(element);
         } else {
           archivedTasks.add(element);
         }
-      }
+      });
       emit(AppGetDatabase());
     });
   }
-  void updateDatabase({
-    required String status,
-    required int id,
-  }) {
-    database!.rawUpdate('UPDATE tasks SET status = ? WHERE id = ?',
-        [status, '$id']).then((value) {
-      getData(database);
-      emit(AppUpdateDatabase());
-    });
+
+  void update({required String status, required int id}) {
+    database!
+        .rawUpdate('UPDATE tasks SET status = ? WHERE id = ?', [status, '$id'])
+        .then((value) {
+          getDataFromDatabase(database);
+          emit(AppUpdateDatabase());
+        });
   }
 }

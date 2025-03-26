@@ -1,7 +1,7 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_app/Cubit/create_databaes/create_cubit.dart';
-import 'package:to_do_app/Cubit/create_databaes/create_state.dart';
+import 'package:to_do_app/Cubit/DataBase/database_cubit.dart';
 import 'package:to_do_app/Widgets/custom_bottom_nav_bar.dart';
 import 'package:to_do_app/Widgets/custom_show_bottom_sheet.dart';
 
@@ -10,17 +10,21 @@ class HomeMainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var cubit = BlocProvider.of<AppCubit>(context);
-    return BlocConsumer<AppCubit, AppState>(
-      listener: (context, state) {},
+    return BlocConsumer<DatabaseCubit, DatabaseState>(
+      listener: (context, state) {
+        if (state is AppInsertDatabase) {
+          Navigator.pop(context);
+        }
+      },
       builder: (context, state) {
+        var cubit = BlocProvider.of<DatabaseCubit>(context);
         return Scaffold(
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.blueAccent,
+            backgroundColor: Colors.blue,
             onPressed: () {
               if (cubit.isChecked) {
                 if (cubit.keyState.currentState?.validate() ?? true) {
-                  cubit.inserttoDataBase(
+                  cubit.insertToDatabase(
                     title: cubit.titleController,
                     time: cubit.timeController,
                     date: cubit.dateController,
@@ -29,14 +33,18 @@ class HomeMainView extends StatelessWidget {
               } else {
                 cubit.scaffoldKey.currentState!
                     .showBottomSheet((context) {
-                      return CustomShowBottomSheet(cubit: cubit);
+                      return CustomShowBottomSheet(
+                        cubit: cubit,
+                      );
                     })
                     .closed
                     .then((value) {
                       cubit.changeBottomSheet(isShow: false, icon: Icons.edit);
-               
                     });
                 cubit.changeBottomSheet(isShow: true, icon: Icons.add);
+                cubit.titleController.clear();
+                cubit.timeController.clear();
+                cubit.dateController.clear();
               }
             },
             child: Icon(cubit.iconData, color: Colors.white),
@@ -49,7 +57,13 @@ class HomeMainView extends StatelessWidget {
             },
             currentIndex: cubit.currentIndex,
           ),
-          body: cubit.pages[cubit.currentIndex],
+          body: ConditionalBuilder(
+            condition: true,
+            builder: (context) => cubit.pages[cubit.currentIndex],
+            fallback: (context) {
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
         );
       },
     );

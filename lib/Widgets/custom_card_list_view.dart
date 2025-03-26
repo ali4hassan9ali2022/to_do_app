@@ -12,7 +12,7 @@ class CustomCardListView extends StatelessWidget {
       builder: (context) {
         return ListView.separated(
           itemBuilder: (context, index) {
-            return const CustomCard();
+            return CustomCard(modle: task[index]);
           },
           separatorBuilder:
               (context, index) => Padding(

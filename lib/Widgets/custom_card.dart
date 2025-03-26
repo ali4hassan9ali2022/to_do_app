@@ -1,39 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/Cubit/DataBase/database_cubit.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key});
-
+  const CustomCard({super.key, required this.modle});
+  final Map modle;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       child: Row(
         children: [
-          const CircleAvatar(radius: 40, child: Text("2:50 AM")),
+          CircleAvatar(radius: 40, child: Text("${modle['time']}")),
           const SizedBox(width: 20),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "title",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  "${modle['title']}",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                Text("date", style: TextStyle(color: Colors.grey)),
+                Text(
+                  "${modle['date']}",
+                  style: const TextStyle(color: Colors.grey),
+                ),
               ],
             ),
           ),
           const SizedBox(width: 20),
           IconButton(
             onPressed: () {
-              // BlocProvider.of<AppCubit>(context).update(status: "Done", id: tasks['id']);
+              BlocProvider.of<DatabaseCubit>(
+                context,
+              ).update(status: "done", id: modle['id']);
             },
             icon: const Icon(Icons.check_box, color: Colors.blue),
           ),
           IconButton(
             onPressed: () {
-              // BlocProvider.of<AppCubit>(context).update(status: "archive", id: tasks['id']);
+              BlocProvider.of<DatabaseCubit>(
+                context,
+              ).update(status: "archive", id: modle['id']);
             },
             icon: const Icon(Icons.archive, color: Colors.grey),
           ),
