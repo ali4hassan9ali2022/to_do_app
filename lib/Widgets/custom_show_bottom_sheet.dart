@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:to_do_app/Cubit/DataBase/database_cubit.dart';
+import 'package:to_do_app/Cubit/cubit/database_cubit.dart';
 import 'package:to_do_app/Widgets/custom_text_form_field.dart';
 
 class CustomShowBottomSheet extends StatelessWidget {
@@ -45,7 +45,8 @@ class CustomShowBottomSheet extends StatelessWidget {
                   context: context,
                   initialTime: TimeOfDay.now(),
                 ).then((value) {
-                  cubit.timeController.text = value!.format(context).toString();
+                  cubit.timeController.text =
+                      value?.format(context).toString() ?? "";
                 });
               },
               type: TextInputType.datetime,
@@ -67,7 +68,13 @@ class CustomShowBottomSheet extends StatelessWidget {
                   firstDate: DateTime.now(),
                   lastDate: DateTime.parse("2030-09-08"),
                 ).then((value) {
-                cubit.dateController.text = DateFormat.yMMMd().format(value!);
+                  if (value != null) {
+                    cubit.dateController.text = DateFormat?.yMMMd().format(
+                      value,
+                    );
+                  } else {
+                    cubit.dateController.text = "";
+                  }
                 });
               },
               type: TextInputType.datetime,

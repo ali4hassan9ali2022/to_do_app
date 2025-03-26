@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:to_do_app/View/archived_task_view.dart';
 import 'package:to_do_app/View/done_task_view.dart';
@@ -10,7 +11,7 @@ part 'database_state.dart';
 
 class DatabaseCubit extends Cubit<DatabaseState> {
   DatabaseCubit() : super(DatabaseInitial());
-   bool isDark = false;
+  bool isDark = false;
   List<Map> newTasks = [];
   List<Map> doneTasks = [];
   List<Map> archivedTasks = [];
@@ -128,9 +129,15 @@ class DatabaseCubit extends Cubit<DatabaseState> {
   }
 
  
+  
+  void loadTheme() async{
 
-  void changeTheme() {
-    isDark = !isDark;
-    emit(AppChangeThemeState());
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+   isDark = prefs.getBool('isDark') ?? false;
+  
+  }
+  void saveTheme(bool isDark) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isDark', isDark);
   }
 }

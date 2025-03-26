@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_app/Cubit/DataBase/database_cubit.dart';
+import 'package:to_do_app/Cubit/cubit/database_cubit.dart';
+
 
 class CustomCard extends StatelessWidget {
   const CustomCard({super.key, required this.modle});

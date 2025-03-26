@@ -1,7 +1,9 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:to_do_app/Cubit/DataBase/database_cubit.dart';
+import 'package:to_do_app/Cubit/Theme_cubit/Theme_cubit.dart';
+import 'package:to_do_app/Cubit/Theme_cubit/theme_state.dart';
+import 'package:to_do_app/Cubit/cubit/database_cubit.dart';
 import 'package:to_do_app/Widgets/custom_bottom_nav_bar.dart';
 import 'package:to_do_app/Widgets/custom_show_bottom_sheet.dart';
 
@@ -33,9 +35,7 @@ class HomeMainView extends StatelessWidget {
               } else {
                 cubit.scaffoldKey.currentState!
                     .showBottomSheet((context) {
-                      return CustomShowBottomSheet(
-                        cubit: cubit,
-                      );
+                      return CustomShowBottomSheet(cubit: cubit);
                     })
                     .closed
                     .then((value) {
@@ -50,7 +50,25 @@ class HomeMainView extends StatelessWidget {
             child: Icon(cubit.iconData, color: Colors.white),
           ),
           key: cubit.scaffoldKey,
-          appBar: AppBar(title: Text(cubit.titlePages[cubit.currentIndex])),
+          appBar: AppBar(
+            title: Text(cubit.titlePages[cubit.currentIndex]),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  BlocProvider.of<ThemeCubit>(context).togglrTheme();
+                },
+                icon: BlocBuilder<ThemeCubit, ThemeState>(
+                  builder: (context, state) {
+                    return Icon(
+                      state is DarkThemeState
+                          ? Icons.dark_mode
+                          : Icons.light_mode,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
           bottomNavigationBar: CustomBottomNavBar(
             onTap: (value) {
               cubit.changeIndex(value);
