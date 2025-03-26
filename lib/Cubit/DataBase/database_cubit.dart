@@ -10,6 +10,7 @@ part 'database_state.dart';
 
 class DatabaseCubit extends Cubit<DatabaseState> {
   DatabaseCubit() : super(DatabaseInitial());
+   bool isDark = false;
   List<Map> newTasks = [];
   List<Map> doneTasks = [];
   List<Map> archivedTasks = [];
@@ -124,5 +125,12 @@ class DatabaseCubit extends Cubit<DatabaseState> {
           getDataFromDatabase(database);
           emit(AppDeleteDatabase());
         });
+  }
+
+ 
+
+  void changeTheme() {
+    isDark = !isDark;
+    emit(AppChangeThemeState());
   }
 }
